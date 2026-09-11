@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 
-const int myThreshold = 10;
+// Personal parameters:
+// Roll number: 04072313029 -> last three digits 029 + 5 = 34.
+// First name: Kabeer; last name: Niazi. No standard Colors value starts
+// with K or N, so teal is used as the fallback seed color.
+const int myThreshold = 34;
 const Color mySeedColor = Colors.teal;
 const String myFullName = 'Kabeerniazi';
 const String myRollNumber = '04072313029';
-
 void main() {
   runApp(const MyApp());
 }
