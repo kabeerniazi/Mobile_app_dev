@@ -20,8 +20,7 @@
 
 The screenshot below should show the counter above the threshold, the threshold message, and at least one reset already performed.
 
-![Enhanced counter app](<img width="1576" height="852" alt="image" src="https://github.com/user-attachments/assets/ae2334b4-1c61-493e-8431-f6a0b756d821" />)
-
+![App Screenshot](./Screenshot%202026-09-11%20155104.png)
 
 ## Reflection
 
