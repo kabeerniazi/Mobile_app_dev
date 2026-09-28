@@ -80,6 +80,6 @@ Fetching...
 Book of the day: Dart in Action
 Fetch failed: Exception: Server down
 
-![517fe976-e5b3-4b85-bed8-15eb27a26238]
+!(517fe976-e5b3-4b85-bed8-15eb27a26238)
 
-![0fc08e37-4dab-4ee6-b99e-c76834f99af5]
+!(0fc08e37-4dab-4ee6-b99e-c76834f99af5)
