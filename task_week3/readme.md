@@ -81,6 +81,6 @@ Book of the day: Dart in Action
 Fetch failed: Exception: Server down
 ```
 screenshots are here:
-![Image](517fe976-e5b3-48b5-bed8-15eb27a22638.png)
+![Image](517fe976-e5b3-4b85-bed8-15eb27a26238.png)
 
 ![Image](0fc08e37-4dab-4ee6-b99e-c76834f99af5.png)
