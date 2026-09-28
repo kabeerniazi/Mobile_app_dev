@@ -1,8 +1,8 @@
 # Week 3 Lab: Library Desk Assistant
 
 **Course:** CS 442 | Mobile Application Development
-**Name:** ____________________ 
-**Roll No:** ____________
+**Name:** Muhammad Kabeer Khan 
+**Roll No:** 04072313029
 
 ## Task Overview
 
@@ -27,8 +27,8 @@ This assignment implements the back-end logic for a campus library desk using pu
 
 When the program is executed, the console output must exactly match the following:
 
-```text
----
+
+--- Part 1 ---
 
 Late fee: 2.5
 Dart in Action
@@ -80,6 +80,6 @@ Fetching...
 Book of the day: Dart in Action
 Fetch failed: Exception: Server down
 
-![517fe976-e5b3-4b85-bed8-15eb27a26238](file:///C:/Users/mukab/Pictures/Typedown/517fe976-e5b3-4b85-bed8-15eb27a26238.png)
+![517fe976-e5b3-4b85-bed8-15eb27a26238]
 
-![0fc08e37-4dab-4ee6-b99e-c76834f99af5](file:///C:/Users/mukab/Pictures/Typedown/0fc08e37-4dab-4ee6-b99e-c76834f99af5.png)
+![0fc08e37-4dab-4ee6-b99e-c76834f99af5]
