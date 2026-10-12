@@ -31,19 +31,17 @@ final int renewAttempts = 2 + u; // renewal attempts made in Step 5
 final int shelfSize = 3 + u * 4; // items on the shelf in Steps 9-10
 // ===========================================================================
 
-
 abstract class LibraryItem {
   final String title;
   final int year;
 
- 
   static int created = 0;
   static int capFee(int fee) => fee > feeCap ? feeCap : fee;
 
   LibraryItem(this.title, this.year) {
     created++;
   }
- 
+
   String describe() => '$title ($year)';
 
   int lateFee(int days);
@@ -113,6 +111,7 @@ class Dvd extends LibraryItem with Renewable {
   int lateFee(int days) => days * feePerDay * 2;
 }
 
+// Top-level helper functions
 Book mainBook() => Book(titles[u], yearOf(u), 100 + 3 * seed);
 
 Magazine mainMagazine() {
@@ -170,7 +169,6 @@ class Fine {
   String toString() => 'Fine ($amount)';
 }
 
-// Task 9.2: Shelf builder creating shelfSize items
 List<LibraryItem> buildShelf() {
   List<LibraryItem> shelf = [];
   for (int k = 0; k < shelfSize; k++) {
@@ -184,6 +182,21 @@ List<LibraryItem> buildShelf() {
     }
   }
   return shelf;
+}
+
+// Task 10.1: Member Class
+class Member {
+  final String name;
+  final MemberType type;
+
+  Member(this.name, this.type);
+
+  Fine feeFor(LibraryItem item, int days) {
+    int fee = item.lateFee(days);
+    int capped = LibraryItem.capFee(fee);
+    int discounted = type.applyDiscount(capped);
+    return Fine(discounted);
+  }
 }
 
 void main() {
@@ -255,6 +268,7 @@ void step5() {
   print('Step 5: renewed $ok of $renewAttempts attempts (limit $renewLimit)');
   print('Step 5: renew once more? ${book.renew(renewLimit)}');
   print('Step 5: dvd can renew too? ${mainDvd().renew(1)}');
+
 }
 
 void step6() {
@@ -288,7 +302,6 @@ void step8() {
   print('Step 8: set size = ${{f1, Fine(f1.amount), f2}.length}');
 }
 
-// Task 9.3: step9 implementation
 void step9() {
   print('--- Step 9 ---');
   LibraryItem.created = 0;
@@ -305,6 +318,21 @@ void step9() {
   print('Step 9: new copies identical? ${identical(Fine(10), Fine(10))}');
 }
 
+// Task 10.2: step10 implementation
 void step10() {
   print('--- Step 10 ---');
+  var shelf = buildShelf();
+  var member = Member('S$seed', MemberType.values[seed % 3]);
+
+  var total = shelf.fold<Fine>(
+    const Fine(0),
+    (sum, item) => sum + member.feeFor(item, daysLate),
+  );
+
+  int b = shelf.where((item) => item is Borrowable).length;
+  int r = shelf.where((item) => item is Renewable).length;
+
+  print('Step 10: ${shelf.length} items, $b borrowable, $r renewable');
+  print('Step 10: ${member.name} (${member.type.name}) owes $total');
+  print('Step 10: over the cap? ${total > Fine(feeCap)}');
 }
