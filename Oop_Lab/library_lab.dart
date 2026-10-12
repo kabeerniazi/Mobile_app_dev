@@ -31,23 +31,29 @@ final int renewAttempts = 2 + u; // renewal attempts made in Step 5
 final int shelfSize = 3 + u * 4; // items on the shelf in Steps 9-10
 // ===========================================================================
 
-// Step 1, 2, 3: Abstract Base Class
+
 abstract class LibraryItem {
   final String title;
   final int year;
 
   LibraryItem(this.title, this.year);
 
-  // Step 2: Custom describe
   String describe() => '$title ($year)';
 
-  // Step 3: Abstract method (contract without a body)
   int lateFee(int days);
 }
 
-// Step 1, 2, 3: Book Subclass
-class Book extends LibraryItem {
+// Task 4.1: Interface contract
+abstract class Borrowable {
+  bool get isAvailable;
+  void borrow();
+  void giveBack();
+}
+
+// Task 4.2: Book Subclass implementing Borrowable
+class Book extends LibraryItem implements Borrowable {
   final int pages;
+  bool _out = false;
 
   Book(super.title, super.year, this.pages);
 
@@ -56,9 +62,17 @@ class Book extends LibraryItem {
 
   @override
   int lateFee(int days) => days * feePerDay;
+
+  @override
+  bool get isAvailable => !_out;
+
+  @override
+  void borrow() => _out = true;
+
+  @override
+  void giveBack() => _out = false;
 }
 
-// Step 2, 3: Magazine Subclass
 class Magazine extends LibraryItem {
   final int issue;
 
@@ -71,7 +85,6 @@ class Magazine extends LibraryItem {
   int lateFee(int days) => days * (feePerDay ~/ 2);
 }
 
-// Step 3: Dvd Subclass
 class Dvd extends LibraryItem {
   final int minutes;
 
@@ -84,7 +97,6 @@ class Dvd extends LibraryItem {
   int lateFee(int days) => days * feePerDay * 2;
 }
 
-// Top-level helper functions
 Book mainBook() => Book(titles[u], yearOf(u), 100 + 3 * seed);
 
 Magazine mainMagazine() {
@@ -119,23 +131,36 @@ void step1() {
   print('Step 1: ${b.title} (${b.year}), ${b.pages} pages');
   print('Step 1: stored as LibraryItem: ${item.title}');
   print('Step 1: runtimeType ${item.runtimeType}');
+
 }
 
 void step2() {
   print('--- Step 2 ---');
   print('Step 2: ${mainBook().describe()}');
   print('Step 2: ${mainMagazine().describe()}');
+
 }
 
 void step3() {
   print('--- Step 3 ---');
-  print('Step 3: Book late fee for $daysLate days = ${mainBook().lateFee(daysLate)}',);
+  print( 'Step 3: Book late fee for $daysLate days = ${mainBook().lateFee(daysLate)}',);
   print('Step 3: Magazine late fee for $daysLate days = ${mainMagazine().lateFee(daysLate)}',);
-  print( 'Step 3: Dvd late fee for $daysLate days = ${mainDvd().lateFee(daysLate)}',);
+  print('Step 3: Dvd late fee for $daysLate days = ${mainDvd().lateFee(daysLate)}',);
 }
 
 void step4() {
   print('--- Step 4 ---');
+  var book = mainBook();
+  print('Step 4: available? ${book.isAvailable}');
+  book.borrow();
+  print('Step 4: after borrow? ${book.isAvailable}');
+  book.giveBack();
+  print('Step 4: after return? ${book.isAvailable}');
+
+  List<LibraryItem> items = [book, mainMagazine(), mainDvd()];
+  for (var item in items) {
+    print('Step 4: ${item.runtimeType} borrowable? ${item is Borrowable}');
+  }
 }
 
 void step5() {
