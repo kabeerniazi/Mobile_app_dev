@@ -32,3 +32,10 @@ Think: Book and Dvd need the same renew code but Magazine must not have it. Why 
  Think: Why is MemberType.student safer than the string 'student'?
 
   Answer: Enums provide compile-time type safety and IDE autocomplete,  preventing subtle bugs caused by typos in raw string literals.
+
+task 7
+
+Think: What do you gain by writing 72.rs instead of rs(72)?
+
+Answer: Extension methods provide a fluent dot-notation syntax, enhancing readability and code discoverability without wrapping values in nested function calls.
+}
