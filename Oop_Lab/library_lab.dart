@@ -24,19 +24,41 @@ final int renewAttempts = 2 + u;            // renewal attempts made in Step 5
 final int shelfSize = 3 + u % 4;            // items on the shelf in Steps 9-10
 // ===========================================================================
 
-// Step 1: Base class
+// Step 2: Base class with describe()
 class LibraryItem {
   final String title;
   final int year;
 
   LibraryItem(this.title, this.year);
+
+  // Task 2.1
+  String describe() => '$title ($year)';
 }
 
-// Step 1: Subclass with super parameters
+// Step 2: Subclass reusing super.describe()
 class Book extends LibraryItem {
   final int pages;
 
   Book(super.title, super.year, this.pages);
+
+  // Task 2.2
+  @override
+  String describe() => '${super.describe()}, $pages pages';
+}
+
+// Task 2.3: Magazine subclass
+class Magazine extends LibraryItem {
+  final int issue;
+
+  Magazine(super.title, super.year, this.issue);
+
+  @override
+  String describe() => '${super.describe()}, issue $issue';
+}
+
+Magazine mainMagazine() {
+  int i = (u + 1) % 10;
+  return Magazine(titles[i], yearOf(i), 1 + (t + u) * 12);
 }
 
 // Step 1: Top-level helper function
@@ -67,7 +89,11 @@ void step1() {
 
   
 } 
-void step2() { print('--- Step 2 ---'); }
+void step2() {
+  print('--- Step 2 ---');
+  print('Step 2: ${mainBook().describe()}');
+  print('Step 2: ${mainMagazine().describe()}');
+}
 void step3() { print('--- Step 3 ---'); }
 void step4() { print('--- Step 4 ---'); }
 void step5() { print('--- Step 5 ---'); }
