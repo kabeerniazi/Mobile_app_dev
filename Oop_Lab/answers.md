@@ -39,3 +39,9 @@ Think: What do you gain by writing 72.rs instead of rs(72)?
 
 Answer: Extension methods provide a fluent dot-notation syntax, enhancing readability and code discoverability without wrapping values in nested function calls.
 }
+
+Task 8
+
+ Think: Delete your hashCode and run again. What happens to the set size, and why does Dart expect both == and hashCode together?
+
+ Answer: The set size becomes 3. Hash-based collections use hashCode to look up hash buckets first. Without matching hashCodes, distinct object instances are stored in different buckets and never evaluated with ==.
