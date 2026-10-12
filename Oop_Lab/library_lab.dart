@@ -31,28 +31,23 @@ final int renewAttempts = 2 + u; // renewal attempts made in Step 5
 final int shelfSize = 3 + u * 4; // items on the shelf in Steps 9-10
 // ===========================================================================
 
-// Step 1, 2, 3: Abstract Base Class
 abstract class LibraryItem {
   final String title;
   final int year;
 
   LibraryItem(this.title, this.year);
 
-  // Step 2: Custom describe
   String describe() => '$title ($year)';
 
-  // Step 3: Abstract method (contract without a body)
   int lateFee(int days);
 }
 
-// Step 4: Interface Contract
 abstract class Borrowable {
   bool get isAvailable;
   void borrow();
   void giveBack();
 }
 
-// Task 5.1: Mixin for renewal behavior
 mixin Renewable {
   int renewals = 0;
 
@@ -65,7 +60,6 @@ mixin Renewable {
   }
 }
 
-//  5: Book Subclass with Renewable and Borrowable
 class Book extends LibraryItem with Renewable implements Borrowable {
   final int pages;
   bool _out = false;
@@ -88,7 +82,6 @@ class Book extends LibraryItem with Renewable implements Borrowable {
   void giveBack() => _out = false;
 }
 
-// Step 2, 3: Magazine Subclass (does NOT use Renewable)
 class Magazine extends LibraryItem {
   final int issue;
 
@@ -101,7 +94,6 @@ class Magazine extends LibraryItem {
   int lateFee(int days) => days * (feePerDay ~/ 2);
 }
 
-// Step 3, 5: Dvd Subclass with Renewable
 class Dvd extends LibraryItem with Renewable {
   final int minutes;
 
@@ -114,7 +106,6 @@ class Dvd extends LibraryItem with Renewable {
   int lateFee(int days) => days * feePerDay * 2;
 }
 
-// Top-level helper functions
 Book mainBook() => Book(titles[u], yearOf(u), 100 + 3 * seed);
 
 Magazine mainMagazine() {
@@ -125,6 +116,20 @@ Magazine mainMagazine() {
 Dvd mainDvd() {
   int i = (u + 2) % 10;
   return Dvd(titles[i], yearOf(i), 90 + seed % 40);
+}
+
+// Task 6
+enum MemberType {
+  student(3, 50),
+  faculty(10, 20),
+  guest(1, 0);
+
+  final int maxLoans;
+  final int discountPercent;
+
+  const MemberType(this.maxLoans, this.discountPercent);
+
+  int applyDiscount(int fee) => fee - (fee * discountPercent ~/ 100);
 }
 
 void main() {
@@ -149,25 +154,26 @@ void step1() {
   print('Step 1: ${b.title} (${b.year}), ${b.pages} pages');
   print('Step 1: stored as LibraryItem: ${item.title}');
   print('Step 1: runtimeType ${item.runtimeType}');
-
-  
 }
 
 void step2() {
   print('--- Step 2 ---');
   print('Step 2: ${mainBook().describe()}');
   print('Step 2: ${mainMagazine().describe()}');
-
- 
 }
 
 void step3() {
   print('--- Step 3 ---');
-  print( 'Step 3: Book late fee for $daysLate days = ${mainBook().lateFee(daysLate)}',);
-  print( 'Step 3: Magazine late fee for $daysLate days = ${mainMagazine().lateFee(daysLate)}',);
-  print( 'Step 3: Dvd late fee for $daysLate days = ${mainDvd().lateFee(daysLate)}',);
+  print(
+    'Step 3: Book late fee for $daysLate days = ${mainBook().lateFee(daysLate)}',
+  );
+  print(
+    'Step 3: Magazine late fee for $daysLate days = ${mainMagazine().lateFee(daysLate)}',
+  );
+  print(
+    'Step 3: Dvd late fee for $daysLate days = ${mainDvd().lateFee(daysLate)}',
+  );
 
-  
 }
 
 void step4() {
@@ -183,11 +189,8 @@ void step4() {
   for (var item in items) {
     print('Step 4: ${item.runtimeType} borrowable? ${item is Borrowable}');
   }
-
-  
 }
 
-// Task 5.3: step5 implementation
 void step5() {
   print('--- Step 5 ---');
   var book = mainBook();
@@ -199,12 +202,16 @@ void step5() {
   print('Step 5: renewed $ok of $renewAttempts attempts (limit $renewLimit)');
   print('Step 5: renew once more? ${book.renew(renewLimit)}');
   print('Step 5: dvd can renew too? ${mainDvd().renew(1)}');
-
-  
 }
 
 void step6() {
   print('--- Step 6 ---');
+  var type = MemberType.values[seed % 3];
+  int fee = mainBook().lateFee(daysLate);
+  print('Step 6: member type ${type.name} (index ${type.index})');
+  print('Step 6: max loans = ${type.maxLoans}');
+  print('Step 6: book fee $fee -> ${type.applyDiscount(fee)} after discount');
+ 
 }
 
 void step7() {
