@@ -26,3 +26,9 @@ Task 5
 Think: Book and Dvd need the same renew code but Magazine must not have it. Why is a mixin a better fit than putting renew in LibraryItem?
 
  Answer: Putting renew in LibraryItem forces all subclasses (including Magazine) to inherit it. A mixin allows selective horizontal reuse across Book and Dvd without polluting the base class.
+
+ Task 6
+
+ Think: Why is MemberType.student safer than the string 'student'?
+
+  Answer: Enums provide compile-time type safety and IDE autocomplete,  preventing subtle bugs caused by typos in raw string literals.
