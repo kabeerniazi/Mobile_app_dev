@@ -8,3 +8,9 @@ Task 2
 Think: What would happen to the output if you forgot @override and mistyped the method name as descibe()?
 
 Answer: Dart would treat descibe() as a new method on Magazine rather than an override. Calling describe() would invoke the parent LibraryItem.describe(), omitting ", issue <issue>".
+
+Task3
+
+ Think: Temporarily try LibraryItem('x', 2000). Read the error. Why can you not create an abstract class directly?
+
+ Answer: Abstract classes serve as incomplete contracts and may define methods without bodies (like lateFee). Instantiating one directly would lead to runtime failures if an unimplemented method were invoked.
