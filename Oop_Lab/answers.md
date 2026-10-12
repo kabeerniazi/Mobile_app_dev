@@ -45,3 +45,9 @@ Task 8
  Think: Delete your hashCode and run again. What happens to the set size, and why does Dart expect both == and hashCode together?
 
  Answer: The set size becomes 3. Hash-based collections use hashCode to look up hash buckets first. Without matching hashCodes, distinct object instances are stored in different buckets and never evaluated with ==.
+
+Task 9 
+
+ Think: Why can created be read as LibraryItem.created without making any object first?
+ 
+  Answer: Static members belong to the class definition namespace itself in memory, not to any individual instance of the class.
