@@ -144,3 +144,38 @@ Step 6: book fee 56 -> 56 after discount
 --- Step 9 ---
 --- Step 10 ---
 
+task 7 
+Seed: 29 (t=2, u=9)
+--- Step 1 ---
+Step 1: Software Testing (2015), 187 pages
+Step 1: stored as LibraryItem: Software Testing
+Step 1: runtimeType Book
+--- Step 2 ---
+Step 2: Software Testing (2015), 187 pages
+Step 2: Dart Basics (1997), issue 133
+--- Step 3 ---
+Step 3: Book late fee for 8 days = 56
+Step 3: Magazine late fee for 8 days = 24
+Step 3: Dvd late fee for 8 days = 112
+--- Step 4 ---
+Step 4: available? true
+Step 4: after borrow? false
+Step 4: after return? true
+Step 4: Book borrowable? true
+Step 4: Magazine borrowable? false
+Step 4: Dvd borrowable? false
+--- Step 5 ---
+Step 5: renewed 7 of 11 attempts (limit 7)
+Step 5: renew once more? false
+Step 5: dvd can renew too? true
+--- Step 6 ---
+Step 6: member type guest (index 2)
+Step 6: max loans = 1
+Step 6: book fee 56 -> 56 after discount
+--- Step 7 ---
+Step 7: Rs 56
+Step 7: initials of "Software Testing" = ST
+Step 7: shelf fee for 8 days = Rs 192
+--- Step 8 ---
+--- Step 9 ---
+--- Step 10 ---
