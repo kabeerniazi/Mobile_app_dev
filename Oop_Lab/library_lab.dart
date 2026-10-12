@@ -1,52 +1,64 @@
-// library_lab.dart  -  Campus Library System
+// library_lab.dart - Campus Library System
 // Name: Muhammad Kabeer Khan   Roll no: 04072313029
 
-const String rollNo = '04072313029';   // e.g. '21F-0347'
+const String rollNo = '04072313029'; // e.g. '21F-0347'
 
 // ===== Seeded settings (generated from YOUR roll number). Do not edit. =====
 final int seed = int.parse(rollNo.substring(rollNo.length - 2));
-final int t = seed ~/ 10;   // tens digit
-final int u = seed % 10;    // units digit
+final int t = seed ~/ 10; // tens digit (2)
+final int u = seed % 10; // units digit (9)
 
 const List<String> titles = [
-  'Dart Basics', 'Flutter In Action', 'Data Structures', 'Operating Systems',
-  'Mobile Design', 'Clean Code', 'Algorithms Unlocked', 'Computer Networks',
-  'Database Systems', 'Software Testing',
+  'Dart Basics',
+  'Flutter In Action',
+  'Data Structures',
+  'Operating Systems',
+  'Mobile Design',
+  'Clean Code',
+  'Algorithms Unlocked',
+  'Computer Networks',
+  'Database Systems',
+  'Software Testing',
 ];
 
-int yearOf(int i) => 1995 + 2 * i + t;      // publication year of titles[i]
-final int feePerDay = 5 + t;                // late fee per day, in rupees
-final int daysLate = 3 + (t + u) % 6;       // normal number of days late
-final int daysBig = 10 + u;                 // a long overdue period
-final int feeCap = 150 + 10 * t;            // no single fee may exceed this
-final int renewLimit = 1 + t % 3;           // renewals allowed per item
-final int renewAttempts = 2 + u;            // renewal attempts made in Step 5
-final int shelfSize = 3 + u % 4;            // items on the shelf in Steps 9-10
+int yearOf(int i) => 1995 + 2 * i + t; // publication year of titles[i]
+final int feePerDay = 5 + t; // late fee per day, in rupees
+final int daysLate = 3 + (t + u) % 6; // normal number of days late
+final int daysBig = 10 + u; // a long overdue period
+final int feeCap = 150 + 10 * t; // no single fee may exceed this
+final int renewLimit = 1 + t * 3; // renewals allowed per item
+final int renewAttempts = 2 + u; // renewal attempts made in Step 5
+final int shelfSize = 3 + u * 4; // items on the shelf in Steps 9-10
 // ===========================================================================
 
-// Step 2: Base class with describe()
-class LibraryItem {
+// Step 1, 2, 3: Abstract Base Class
+abstract class LibraryItem {
   final String title;
   final int year;
 
   LibraryItem(this.title, this.year);
 
-  // Task 2.1
+  // Step 2: Custom describe
   String describe() => '$title ($year)';
+
+  // Step 3: Abstract method (contract without a body)
+  int lateFee(int days);
 }
 
-// Step 2: Subclass reusing super.describe()
+// Step 1, 2, 3: Book Subclass
 class Book extends LibraryItem {
   final int pages;
 
   Book(super.title, super.year, this.pages);
 
-  // Task 2.2
   @override
   String describe() => '${super.describe()}, $pages pages';
+
+  @override
+  int lateFee(int days) => days * feePerDay;
 }
 
-// Task 2.3: Magazine subclass
+// Step 2, 3: Magazine Subclass
 class Magazine extends LibraryItem {
   final int issue;
 
@@ -54,15 +66,36 @@ class Magazine extends LibraryItem {
 
   @override
   String describe() => '${super.describe()}, issue $issue';
+
+  @override
+  int lateFee(int days) => days * (feePerDay ~/ 2);
 }
+
+// Step 3: Dvd Subclass
+class Dvd extends LibraryItem {
+  final int minutes;
+
+  Dvd(super.title, super.year, this.minutes);
+
+  @override
+  String describe() => '${super.describe()}, $minutes min';
+
+  @override
+  int lateFee(int days) => days * feePerDay * 2;
+}
+
+// Top-level helper functions
+Book mainBook() => Book(titles[u], yearOf(u), 100 + 3 * seed);
 
 Magazine mainMagazine() {
   int i = (u + 1) % 10;
   return Magazine(titles[i], yearOf(i), 1 + (t + u) * 12);
 }
 
-// Step 1: Top-level helper function
-Book mainBook() => Book(titles[u], yearOf(u), 100 + 3 * seed);
+Dvd mainDvd() {
+  int i = (u + 2) % 10;
+  return Dvd(titles[i], yearOf(i), 90 + seed % 40);
+}
 
 void main() {
   print('Seed: $seed (t=$t, u=$u)');
@@ -78,7 +111,7 @@ void main() {
   step10();
 }
 
-void step1() { 
+void step1() {
   print('--- Step 1 ---');
   Book b = mainBook();
   LibraryItem item = b;
@@ -86,19 +119,45 @@ void step1() {
   print('Step 1: ${b.title} (${b.year}), ${b.pages} pages');
   print('Step 1: stored as LibraryItem: ${item.title}');
   print('Step 1: runtimeType ${item.runtimeType}');
+}
 
-  
-} 
 void step2() {
   print('--- Step 2 ---');
   print('Step 2: ${mainBook().describe()}');
   print('Step 2: ${mainMagazine().describe()}');
 }
-void step3() { print('--- Step 3 ---'); }
-void step4() { print('--- Step 4 ---'); }
-void step5() { print('--- Step 5 ---'); }
-void step6() { print('--- Step 6 ---'); }
-void step7() { print('--- Step 7 ---'); }
-void step8() { print('--- Step 8 ---'); }
-void step9() { print('--- Step 9 ---'); }
-void step10() { print('--- Step 10 ---'); }
+
+void step3() {
+  print('--- Step 3 ---');
+  print('Step 3: Book late fee for $daysLate days = ${mainBook().lateFee(daysLate)}',);
+  print('Step 3: Magazine late fee for $daysLate days = ${mainMagazine().lateFee(daysLate)}',);
+  print( 'Step 3: Dvd late fee for $daysLate days = ${mainDvd().lateFee(daysLate)}',);
+}
+
+void step4() {
+  print('--- Step 4 ---');
+}
+
+void step5() {
+  print('--- Step 5 ---');
+}
+
+void step6() {
+  print('--- Step 6 ---');
+}
+
+void step7() {
+  print('--- Step 7 ---');
+}
+
+void step8() {
+  print('--- Step 8 ---');
+}
+
+void step9() {
+  print('--- Step 9 ---');
+}
+
+void step10() {
+  print('--- Step 10 ---');
+}
