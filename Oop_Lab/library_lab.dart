@@ -42,7 +42,6 @@ abstract class LibraryItem {
   int lateFee(int days);
 }
 
-// Step 4: Interface Contract
 abstract class Borrowable {
   bool get isAvailable;
   void borrow();
@@ -107,7 +106,6 @@ class Dvd extends LibraryItem with Renewable {
   int lateFee(int days) => days * feePerDay * 2;
 }
 
-// Top-level helper functions
 Book mainBook() => Book(titles[u], yearOf(u), 100 + 3 * seed);
 
 Magazine mainMagazine() {
@@ -133,7 +131,6 @@ enum MemberType {
   int applyDiscount(int fee) => fee - (fee * discountPercent ~/ 100);
 }
 
-// Task 7.1: Extension Methods
 extension MoneyText on int {
   String get rs => 'Rs $this';
 }
@@ -145,6 +142,26 @@ extension Initials on String {
 extension ShelfMath on List<LibraryItem> {
   int totalLateFee(int days) =>
       fold(0, (sum, item) => sum + item.lateFee(days));
+}
+
+// Task 8.1: Fine Class with Operator Overloading, == and hashCode
+class Fine {
+  final int amount;
+
+  const Fine(this.amount);
+
+  Fine operator +(Fine other) => Fine(amount + other.amount);
+  bool operator >(Fine other) => amount > other.amount;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) || (other is Fine && other.amount == amount);
+
+  @override
+  int get hashCode => amount.hashCode;
+
+  @override
+  String toString() => 'Fine ($amount)';
 }
 
 void main() {
@@ -227,7 +244,6 @@ void step6() {
   print('Step 6: book fee $fee -> ${type.applyDiscount(fee)} after discount');
 }
 
-// Task 7.2: step7 implementation
 void step7() {
   print('--- Step 7 ---');
   var type = MemberType.values[seed % 3];
@@ -239,8 +255,16 @@ void step7() {
   print('Step 7: shelf fee for $daysLate days = ${shelfItems.totalLateFee(daysLate).rs}');
 }
 
+// Task 8.2: step8 implementation
 void step8() {
   print('--- Step 8 ---');
+  var f1 = Fine(mainBook().lateFee(daysLate));
+  var f2 = Fine(mainMagazine().lateFee(daysLate));
+
+  print('Step 8: $f1 + $f2 = ${f1 + f2}');
+  print('Step 8: first bigger? ${f1 > f2}');
+  print('Step 8: equal copies? ${f1 == Fine(f1.amount)}');
+  print('Step 8: set size = ${{f1, Fine(f1.amount), f2}.length}');
 }
 
 void step9() {
