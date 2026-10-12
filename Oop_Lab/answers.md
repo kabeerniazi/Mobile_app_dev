@@ -21,3 +21,8 @@ Task3
 
  Answer: 'extends' allows inheriting concrete method implementations. Here Borrowable has no bodies, and Dart does not support multiple class inheritance since Book already extends LibraryItem.
 
+Task 5
+
+Think: Book and Dvd need the same renew code but Magazine must not have it. Why is a mixin a better fit than putting renew in LibraryItem?
+
+ Answer: Putting renew in LibraryItem forces all subclasses (including Magazine) to inherit it. A mixin allows selective horizontal reuse across Book and Dvd without polluting the base class.
