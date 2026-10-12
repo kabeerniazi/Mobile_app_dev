@@ -51,3 +51,17 @@ Task 9
  Think: Why can created be read as LibraryItem.created without making any object first?
  
   Answer: Static members belong to the class definition namespace itself in memory, not to any individual instance of the class.
+
+ Wrap-Up Reflection Answers
+
+Q1. What can a subclass using extends use for free that a class using implements has to write itself?
+A subclass using `extends` inherits concrete method bodies, constructors, and field storage from the superclass. In contrast, a class using `implements` treats the parent solely as an interface contract and must write out its own implementation for every single method, getter, and setter.
+
+Q2. Book and Dvd both use Renewable. When would you pick a mixin, and when an abstract parent class?  
+Pick an abstract parent class when modeling an "is-a" hierarchical relationship where all subclasses fundamentally share common state and identity. Pick a mixin when you need to share modular behavior horizontally across specific classes without forcing that behavior onto unrelated sibling classes (like `Magazine`).
+
+Q3. Why must you override hashCode whenever you override ==?
+Hash-based collections (`Set` and `Map`) determine an object's storage bucket using its `hashCode` before testing for equality with `==`. If two objects evaluate to equal via `==` but have different `hashCode` values, collections place them in different buckets and fail to identify them as the same item.
+
+Q4. An extension method on String and a subclass of String both add behaviour. Why does Dart let you write the first one but not the second?  
+Extension methods are resolved statically at compile time without altering the underlying class's layout or memory structure. Subclassing `String` is forbidden because `String` is a final, optimized core platform type whose internal runtime representation cannot be safely modified.
