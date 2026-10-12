@@ -31,12 +31,19 @@ final int renewAttempts = 2 + u; // renewal attempts made in Step 5
 final int shelfSize = 3 + u * 4; // items on the shelf in Steps 9-10
 // ===========================================================================
 
+
 abstract class LibraryItem {
   final String title;
   final int year;
 
-  LibraryItem(this.title, this.year);
+ 
+  static int created = 0;
+  static int capFee(int fee) => fee > feeCap ? feeCap : fee;
 
+  LibraryItem(this.title, this.year) {
+    created++;
+  }
+ 
   String describe() => '$title ($year)';
 
   int lateFee(int days);
@@ -144,7 +151,6 @@ extension ShelfMath on List<LibraryItem> {
       fold(0, (sum, item) => sum + item.lateFee(days));
 }
 
-// Task 8.1: Fine Class with Operator Overloading, == and hashCode
 class Fine {
   final int amount;
 
@@ -162,6 +168,22 @@ class Fine {
 
   @override
   String toString() => 'Fine ($amount)';
+}
+
+// Task 9.2: Shelf builder creating shelfSize items
+List<LibraryItem> buildShelf() {
+  List<LibraryItem> shelf = [];
+  for (int k = 0; k < shelfSize; k++) {
+    int i = (u + k) % 10;
+    if (k % 3 == 0) {
+      shelf.add(Book(titles[i], yearOf(i), 100 + 3 * seed));
+    } else if (k % 3 == 1) {
+      shelf.add(Magazine(titles[i], yearOf(i), 1 + (t + k) % 12));
+    } else {
+      shelf.add(Dvd(titles[i], yearOf(i), 90 + seed % 40));
+    }
+  }
+  return shelf;
 }
 
 void main() {
@@ -255,7 +277,6 @@ void step7() {
   print('Step 7: shelf fee for $daysLate days = ${shelfItems.totalLateFee(daysLate).rs}');
 }
 
-// Task 8.2: step8 implementation
 void step8() {
   print('--- Step 8 ---');
   var f1 = Fine(mainBook().lateFee(daysLate));
@@ -267,8 +288,21 @@ void step8() {
   print('Step 8: set size = ${{f1, Fine(f1.amount), f2}.length}');
 }
 
+// Task 9.3: step9 implementation
 void step9() {
   print('--- Step 9 ---');
+  LibraryItem.created = 0;
+  buildShelf();
+  var shelf = buildShelf();
+
+  print('Step 9: items created ${LibraryItem.created}');
+  print(
+    'Step 9: capped fee ${LibraryItem.capFee(shelf.first.lateFee(daysBig))} (cap $feeCap)',
+  );
+  print(
+    'Step 9: const copies identical? ${identical(const Fine(10), const Fine(10))}',
+  );
+  print('Step 9: new copies identical? ${identical(Fine(10), Fine(10))}');
 }
 
 void step10() {
