@@ -80,6 +80,9 @@ class HomePage extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             const Tally(),
+            const SizedBox(height: 12),
+            // Task 7.1: BuggyCounter added below Tally
+            const BuggyCounter(),
           ],
         ),
       ),
@@ -167,7 +170,6 @@ class Tally extends StatefulWidget {
 class _TallyState extends State<Tally> {
   int _count = startCount;
 
-  // Task 6.1: Capped at maxCount
   void _plus() {
     setState(() {
       _count += stepSize;
@@ -175,7 +177,6 @@ class _TallyState extends State<Tally> {
     });
   }
 
-  // Task 6.2: Minus action (floor at 0)
   void _minus() {
     setState(() {
       _count -= stepSize;
@@ -183,7 +184,6 @@ class _TallyState extends State<Tally> {
     });
   }
 
-  // Task 6.2: Reset action (back to startCount)
   void _reset() {
     setState(() {
       _count = startCount;
@@ -227,7 +227,7 @@ class _TallyState extends State<Tally> {
   // On hot restart, the count resets to startCount because Flutter destroys all State objects and reinitializes the entire application from scratch.
 }
 
-// ---- Provided for Step 7. It has a bug on purpose. Do not rename anything.
+// Step 7: BuggyCounter with the setState fix applied
 class BuggyCounter extends StatefulWidget {
   const BuggyCounter({super.key});
 
@@ -246,12 +246,19 @@ class _BuggyCounterState extends State<BuggyCounter> {
         const SizedBox(width: 12),
         ElevatedButton(
           key: const Key('bug-button'),
+          // Task 7.2: Wrapped in setState so the UI rebuilds on tap
           onPressed: () {
-            _clicks += bugStep;
+            setState(() {
+              _clicks += bugStep;
+            });
           },
           child: Text('+$bugStep'),
         ),
       ],
     );
   }
+
+  // Think (Step 7): Before the fix, you tapped three times. What was the value of clicks inside the State,
+  // and what did the screen show? Write both numbers (you need the first for ANSWERS.md, A3).
+  // Answer: Value of _clicks inside State was 6 (3 taps * bugStep of 2). The screen showed 0.
 }
