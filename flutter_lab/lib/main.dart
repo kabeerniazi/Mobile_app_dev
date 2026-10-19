@@ -81,7 +81,6 @@ class HomePage extends StatelessWidget {
             const SizedBox(height: 12),
             const Tally(),
             const SizedBox(height: 12),
-            // Task 8.4: Countdown added below Tally
             const Countdown(),
             const SizedBox(height: 12),
             const BuggyCounter(),
@@ -229,7 +228,7 @@ class _TallyState extends State<Tally> {
   // On hot restart, the count resets to startCount because Flutter destroys all State objects and reinitializes the entire application from scratch.
 }
 
-// Step 8: Countdown StatefulWidget with Timer and dispose
+// Step 8 & 9: Countdown StatefulWidget with build counter and lifecycle logging
 class Countdown extends StatefulWidget {
   const Countdown({super.key});
 
@@ -240,12 +239,14 @@ class Countdown extends StatefulWidget {
 class _CountdownState extends State<Countdown> {
   late int _left;
   late Timer _timer;
+  int _builds = 0; // Task 9.1: Build counter
 
   @override
   void initState() {
     super.initState();
+    // Task 9.2: Record initState
+    lifecycleLog.add('initState');
     _left = startSeconds;
-    // Task 8.2: Periodic 1-second countdown timer
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() => _left--);
       if (_left <= 0) timer.cancel();
@@ -254,24 +255,35 @@ class _CountdownState extends State<Countdown> {
 
   @override
   void dispose() {
-    // Task 8.3: Cancel timer before super.dispose
+    // Task 9.2: Record dispose before super.dispose()
+    lifecycleLog.add('dispose');
     _timer.cancel();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    // Task 8.4: Conditional display using the same Key('time-left')
-    if (_left > 0) {
-      return Text('Time left: $_left s', key: const Key('time-left'));
-    } else {
-      return const Text('Time is up!', key: const Key('time-left'));
-    }
+    // Task 9.1: Increment on every build execution
+    _builds++;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _left > 0
+            ? Text('Time left: $_left s', key: const Key('time-left'))
+            : const Text('Time is up!', key: const Key('time-left')),
+        Text('Builds: $_builds', key: const Key('builds')),
+      ],
+    );
   }
 
   // Think (Step 8): What error appears in the console if you delete the _timer.cancel() from dispose and the widget is removed?
   // Answer: The periodic timer continues running in the background and attempts to call setState() on an unmounted State object.
   // This causes Flutter to throw an exception: "FlutterError (setState() called after dispose(): _CountdownState#... was already disposed)".
+
+  // Think (Step 9): Why does it increase by one per second and not by two? Where could you print lifecycleLog to prove that dispose ran?
+  // Answer: It increases by one per second because Timer.periodic fires once every second, invoking setState() exactly once per tick,
+  // which schedules a single build pass. You could print lifecycleLog inside an automated test after pumping widget disposal,
+  // in a parent route's transition observer, or inside a top-level route pop listener after the Countdown widget unmounts.
 }
 
 // Step 7: BuggyCounter with setState fix
