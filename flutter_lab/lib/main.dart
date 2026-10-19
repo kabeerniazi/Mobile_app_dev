@@ -79,8 +79,8 @@ class HomePage extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 12),
-            // Step 4.3: Add GoalBanner below info Row
-            GoalBanner(count: startCount, max: maxCount),
+            // Step 5.3: Tally placed below info Row (GoalBanner is moved inside Tally)
+            const Tally(),
           ],
         ),
       ),
@@ -144,7 +144,6 @@ class GoalBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Task 4.2: Integer division for percentage
     final int percent = count * 100 ~/ max;
     return Text(
       'Progress: $count of $max ($percent%)',
@@ -156,6 +155,50 @@ class GoalBanner extends StatelessWidget {
   // Answer: GoalBanner is a StatelessWidget whose build output depends strictly on the parameters passed
   // into its constructor. It has no internal mutable state. To make it show a new count, its parent widget
   // must rebuild and instantiate a new GoalBanner with the updated count value.
+}
+
+// Step 5: Tally StatefulWidget and State
+class Tally extends StatefulWidget {
+  const Tally({super.key});
+
+  @override
+  State<Tally> createState() => _TallyState();
+}
+
+class _TallyState extends State<Tally> {
+  int _count = startCount;
+
+  // Task 5.3: plus action with setState
+  void _plus() {
+    setState(() {
+      _count += stepSize;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Count: $_count', key: const Key('count')),
+        GoalBanner(count: _count, max: maxCount),
+        Row(
+          children: [
+            ElevatedButton(
+              key: const Key('plus'),
+              onPressed: _plus,
+              child: Text('+$stepSize'),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  // Think (Step 5): The class Tally has no fields that change, yet TallyState does. Why are there two classes?
+  // Answer: Flutter separates the widget configuration (Tally), which is lightweight and immutable
+  // (recreated frequently), from the state object (_TallyState), which persists across rebuilds
+  // to maintain mutable state in memory.
 }
 
 // ---- Provided for Step 7. It has a bug on purpose. Do not rename anything.
