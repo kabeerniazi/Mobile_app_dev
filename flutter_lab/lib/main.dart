@@ -79,7 +79,6 @@ class HomePage extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 12),
-            // Step 5.3: Tally placed below info Row (GoalBanner is moved inside Tally)
             const Tally(),
           ],
         ),
@@ -157,7 +156,7 @@ class GoalBanner extends StatelessWidget {
   // must rebuild and instantiate a new GoalBanner with the updated count value.
 }
 
-// Step 5: Tally StatefulWidget and State
+// Step 5 & 6: Tally StatefulWidget and State
 class Tally extends StatefulWidget {
   const Tally({super.key});
 
@@ -168,10 +167,26 @@ class Tally extends StatefulWidget {
 class _TallyState extends State<Tally> {
   int _count = startCount;
 
-  // Task 5.3: plus action with setState
+  // Task 6.1: Capped at maxCount
   void _plus() {
     setState(() {
       _count += stepSize;
+      if (_count > maxCount) _count = maxCount;
+    });
+  }
+
+  // Task 6.2: Minus action (floor at 0)
+  void _minus() {
+    setState(() {
+      _count -= stepSize;
+      if (_count < 0) _count = 0;
+    });
+  }
+
+  // Task 6.2: Reset action (back to startCount)
+  void _reset() {
+    setState(() {
+      _count = startCount;
     });
   }
 
@@ -189,16 +204,27 @@ class _TallyState extends State<Tally> {
               onPressed: _plus,
               child: Text('+$stepSize'),
             ),
+            const SizedBox(width: 8),
+            ElevatedButton(
+              key: const Key('minus'),
+              onPressed: _minus,
+              child: Text('-$stepSize'),
+            ),
+            const SizedBox(width: 8),
+            OutlinedButton(
+              key: const Key('reset'),
+              onPressed: _reset,
+              child: const Text('Reset'),
+            ),
           ],
         ),
       ],
     );
   }
 
-  // Think (Step 5): The class Tally has no fields that change, yet TallyState does. Why are there two classes?
-  // Answer: Flutter separates the widget configuration (Tally), which is lightweight and immutable
-  // (recreated frequently), from the state object (_TallyState), which persists across rebuilds
-  // to maintain mutable state in memory.
+  // Think (Step 6): Hot reload while the count is 12. Does it stay 12? Now do a hot restart. Explain the difference using the words widget and State.
+  // Answer: On hot reload, the count stays 12 because Flutter rebuilds the widget tree while preserving existing State objects in memory.
+  // On hot restart, the count resets to startCount because Flutter destroys all State objects and reinitializes the entire application from scratch.
 }
 
 // ---- Provided for Step 7. It has a bug on purpose. Do not rename anything.
