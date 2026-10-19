@@ -81,7 +81,9 @@ class HomePage extends StatelessWidget {
             const SizedBox(height: 12),
             const Tally(),
             const SizedBox(height: 12),
-            // Task 7.1: BuggyCounter added below Tally
+            // Task 8.4: Countdown added below Tally
+            const Countdown(),
+            const SizedBox(height: 12),
             const BuggyCounter(),
           ],
         ),
@@ -227,7 +229,52 @@ class _TallyState extends State<Tally> {
   // On hot restart, the count resets to startCount because Flutter destroys all State objects and reinitializes the entire application from scratch.
 }
 
-// Step 7: BuggyCounter with the setState fix applied
+// Step 8: Countdown StatefulWidget with Timer and dispose
+class Countdown extends StatefulWidget {
+  const Countdown({super.key});
+
+  @override
+  State<Countdown> createState() => _CountdownState();
+}
+
+class _CountdownState extends State<Countdown> {
+  late int _left;
+  late Timer _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    _left = startSeconds;
+    // Task 8.2: Periodic 1-second countdown timer
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      setState(() => _left--);
+      if (_left <= 0) timer.cancel();
+    });
+  }
+
+  @override
+  void dispose() {
+    // Task 8.3: Cancel timer before super.dispose
+    _timer.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // Task 8.4: Conditional display using the same Key('time-left')
+    if (_left > 0) {
+      return Text('Time left: $_left s', key: const Key('time-left'));
+    } else {
+      return const Text('Time is up!', key: const Key('time-left'));
+    }
+  }
+
+  // Think (Step 8): What error appears in the console if you delete the _timer.cancel() from dispose and the widget is removed?
+  // Answer: The periodic timer continues running in the background and attempts to call setState() on an unmounted State object.
+  // This causes Flutter to throw an exception: "FlutterError (setState() called after dispose(): _CountdownState#... was already disposed)".
+}
+
+// Step 7: BuggyCounter with setState fix
 class BuggyCounter extends StatefulWidget {
   const BuggyCounter({super.key});
 
@@ -246,7 +293,6 @@ class _BuggyCounterState extends State<BuggyCounter> {
         const SizedBox(width: 12),
         ElevatedButton(
           key: const Key('bug-button'),
-          // Task 7.2: Wrapped in setState so the UI rebuilds on tap
           onPressed: () {
             setState(() {
               _clicks += bugStep;
