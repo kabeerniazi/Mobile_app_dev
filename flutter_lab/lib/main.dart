@@ -36,7 +36,7 @@ final List<String> lifecycleLog = <String>[];
 
 void main() => runApp(const LabApp());
 
-// Keep the name LabApp and its const constructor: the checker uses them.
+// Stateless: Root application configuration that sets up MaterialApp routing and theme without mutable state.
 class LabApp extends StatelessWidget {
   const LabApp({super.key});
 
@@ -49,7 +49,7 @@ class LabApp extends StatelessWidget {
   }
 }
 
-// Step 1: HomePage widget
+// Stateless: Organizes the page frame with an AppBar and a SingleChildScrollView; its layout structure never mutates.
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
@@ -98,7 +98,7 @@ class HomePage extends StatelessWidget {
   // It is exactly 8 levels deep.
 }
 
-// Step 2: StudentCard widget
+// Stateless: Displays read-only student identification information purely from immutable constructor parameters.
 class StudentCard extends StatelessWidget {
   final String name;
   final String roll;
@@ -134,7 +134,7 @@ class StudentCard extends StatelessWidget {
   // immutable class cannot contain non-final instance fields.
 }
 
-// Step 4: GoalBanner widget
+// Stateless: Computes and renders a progress string strictly derived from input parameters without internal state.
 class GoalBanner extends StatelessWidget {
   final int count;
   final int max;
@@ -160,7 +160,7 @@ class GoalBanner extends StatelessWidget {
   // must rebuild and instantiate a new GoalBanner with the updated count value.
 }
 
-// Step 5 & 6: Tally StatefulWidget and State
+// Stateful: Holds the interactive study count and provides plus, minus, and reset methods that trigger setState.
 class Tally extends StatefulWidget {
   const Tally({super.key});
 
@@ -223,12 +223,17 @@ class _TallyState extends State<Tally> {
     );
   }
 
+  // Think (Step 5): The class Tally has no fields that change, yet TallyState does. Why are there two classes?
+  // Answer: Flutter separates the widget configuration (Tally), which is lightweight and immutable
+  // (recreated frequently), from the state object (_TallyState), which persists across rebuilds
+  // to maintain mutable state in memory.
+
   // Think (Step 6): Hot reload while the count is 12. Does it stay 12? Now do a hot restart. Explain the difference using the words widget and State.
   // Answer: On hot reload, the count stays 12 because Flutter rebuilds the widget tree while preserving existing State objects in memory.
   // On hot restart, the count resets to startCount because Flutter destroys all State objects and reinitializes the entire application from scratch.
 }
 
-// Step 8 & 9: Countdown StatefulWidget with build counter and lifecycle logging
+// Stateful: Manages active timer execution, remaining seconds, build invocation counting, and lifecycle hooks.
 class Countdown extends StatefulWidget {
   const Countdown({super.key});
 
@@ -239,12 +244,11 @@ class Countdown extends StatefulWidget {
 class _CountdownState extends State<Countdown> {
   late int _left;
   late Timer _timer;
-  int _builds = 0; // Task 9.1: Build counter
+  int _builds = 0;
 
   @override
   void initState() {
     super.initState();
-    // Task 9.2: Record initState
     lifecycleLog.add('initState');
     _left = startSeconds;
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
@@ -255,7 +259,6 @@ class _CountdownState extends State<Countdown> {
 
   @override
   void dispose() {
-    // Task 9.2: Record dispose before super.dispose()
     lifecycleLog.add('dispose');
     _timer.cancel();
     super.dispose();
@@ -263,7 +266,6 @@ class _CountdownState extends State<Countdown> {
 
   @override
   Widget build(BuildContext context) {
-    // Task 9.1: Increment on every build execution
     _builds++;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -286,7 +288,7 @@ class _CountdownState extends State<Countdown> {
   // in a parent route's transition observer, or inside a top-level route pop listener after the Countdown widget unmounts.
 }
 
-// Step 7: BuggyCounter with setState fix
+// Stateful: Demonstrates dynamic UI re-rendering driven by user interactions and setState calls.
 class BuggyCounter extends StatefulWidget {
   const BuggyCounter({super.key});
 
