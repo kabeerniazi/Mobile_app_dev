@@ -76,7 +76,6 @@ class LabApp extends StatelessWidget {
     return const MaterialApp(title: 'Team Board', home: HomePage());
   }
 }
-
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
@@ -91,6 +90,21 @@ class HomePage extends StatelessWidget {
           children: [
             SettingsCard(),
             SizedBox(height: 12),
+            Welcome(),
+            SizedBox(height: 12),
+            Clock(),
+            SizedBox(height: 12),
+            SwapBoard(),
+            SizedBox(height: 12),
+            InfoPanel(),
+            SizedBox(height: 12),
+            SummaryRow(),
+            SizedBox(height: 12),
+            ShareRow(),
+            SizedBox(height: 12),
+            InfoBox(),
+            SizedBox(height: 12),
+            StampStack(),
           ],
         ),
       ),
@@ -409,6 +423,39 @@ class InfoBox extends StatelessWidget {
         border: Border.all(width: boxBorder),
       ),
       child: Text('Course: $course', key: const Key('box-text')),
+    );
+  }
+}
+// Step 10: Stack and the whole screen
+// Think answer 1: The size of the Stack is determined by its non-positioned children 
+// (here, the 300x120 base Container).
+// Think answer 2: If the Icons came first and the grey Container last, the opaque 
+// Container would be painted on top, completely covering and hiding the Icons underneath.
+class StampStack extends StatelessWidget {
+  const StampStack({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      key: const Key('stack'),
+      children: [
+        Container(
+          key: const Key('layer-base'),
+          width: 300,
+          height: 120,
+          color: Colors.grey.shade300,
+        ),
+        Positioned(
+          top: dotTop,
+          right: dotRight,
+          child: const Icon(Icons.star, key: Key('dot-top')),
+        ),
+        Positioned(
+          bottom: dotBottom,
+          left: dotLeft,
+          child: const Icon(Icons.circle, key: Key('dot-bottom')),
+        ),
+      ],
     );
   }
 }
