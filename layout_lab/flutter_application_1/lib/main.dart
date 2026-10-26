@@ -118,29 +118,6 @@ class SettingsCard extends StatelessWidget {
   }
 }
 
-class SummaryRow extends StatelessWidget {
-  const SummaryRow({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Text(
-          'Part A: read the widget tree of the $course board from top to bottom.',
-          key: const Key('sum-a'),
-        ),
-        Text(
-          'Part B: build each box from small widgets and never extend a builtin class.',
-          key: const Key('sum-b'),
-        ),
-        Text(
-          'Part C: break the layout on purpose, then fix it with Expanded or Wrap.',
-          key: const Key('sum-c'),
-        ),
-      ],
-    );
-  }
-}
 
 // Step 2: dispose, build count, lifecycleLog
 // Think answer: Builds goes up by one per second because each tick triggers exactly one setState().
@@ -369,6 +346,44 @@ class SummaryRow extends StatelessWidget {
           child: Text(
             'Part C: break the layout on purpose, then fix it with Expanded or Wrap.',
             key: Key('sum-c'),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+// Step 8: Expanded vs Flexible
+// Think answer: Expanded enforces FlexFit.tight (must consume all allotted flex width), while Flexible 
+// defaults to FlexFit.loose (can remain smaller than its allotted share). Swapping them would force 
+// the second button to expand and allow the first to shrink.
+class ShareRow extends StatelessWidget {
+  const ShareRow({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      key: const Key('share-row'),
+      children: [
+        SizedBox(
+          key: const Key('fixed'),
+          width: fixedW,
+          child: ElevatedButton(onPressed: () {}, child: const Text('F')),
+        ),
+        Expanded(
+          flex: flexA,
+          child: ElevatedButton(
+            key: const Key('exp'),
+            onPressed: () {},
+            child: const Text('Exp'),
+          ),
+        ),
+        Flexible(
+          flex: flexB,
+          child: ElevatedButton(
+            key: const Key('flex'),
+            onPressed: () {},
+            child: const Text('Flex'),
           ),
         ),
       ],
