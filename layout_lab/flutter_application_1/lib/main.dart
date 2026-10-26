@@ -287,3 +287,58 @@ class _SwapBoardState extends State<SwapBoard> {
     );
   }
 }
+// Step 6: Row and Column: Axes
+// Think answer: In a Column, the main axis is vertical. The cross axis is horizontal (left to right), 
+// so setting crossAxisAlignment: CrossAxisAlignment.center positions children horizontally across the width.
+class InfoPanel extends StatelessWidget {
+  const InfoPanel({super.key});
+
+  MainAxisAlignment _resolveMainAxis() {
+    switch (mainName) {
+      case 'start': return MainAxisAlignment.start;
+      case 'center': return MainAxisAlignment.center;
+      case 'end': return MainAxisAlignment.end;
+      case 'spaceBetween': return MainAxisAlignment.spaceBetween;
+      case 'spaceAround': return MainAxisAlignment.spaceAround;
+      case 'spaceEvenly': return MainAxisAlignment.spaceEvenly;
+      default: return MainAxisAlignment.start;
+    }
+  }
+
+  CrossAxisAlignment _resolveCrossAxis() {
+    switch (crossName) {
+      case 'start': return CrossAxisAlignment.start;
+      case 'center': return CrossAxisAlignment.center;
+      case 'end': return CrossAxisAlignment.end;
+      default: return CrossAxisAlignment.start;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          key: const Key('info-row'),
+          mainAxisAlignment: _resolveMainAxis(),
+          children: [
+            Text('Start: $startSec s', key: const Key('row-a')),
+            Text('Tick: $tick s', key: const Key('row-b')),
+            Text('Stop: $stopAt s', key: const Key('row-c')),
+          ],
+        ),
+        const SizedBox(height: 12),
+        Column(
+          key: const Key('info-col'),
+          crossAxisAlignment: _resolveCrossAxis(),
+          children: [
+            Text('Name: $studentName', key: const Key('col-a')),
+            Text('Roll no: $rollNo', key: const Key('col-b')),
+            Text('Course: $course', key: const Key('col-c')),
+          ],
+        ),
+      ],
+    );
+  }
+}
