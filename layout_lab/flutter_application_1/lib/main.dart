@@ -213,3 +213,77 @@ class Probe extends StatelessWidget {
     );
   }
 }
+// Step 4: Composition and Tile
+// Think answer: This is called Composition (prefer composition over inheritance). Flutter prefers 
+// it because assembling small single-purpose widgets creates flexible, decoupled, and declarative UIs.
+class Welcome extends StatelessWidget {
+  const Welcome({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Text('Welcome, $studentName', key: const Key('welcome')),
+    );
+  }
+}
+
+class Tile extends StatefulWidget {
+  final String label;
+  const Tile(this.label, {super.key});
+
+  @override
+  State<Tile> createState() => _TileState();
+}
+
+class _TileState extends State<Tile> {
+  int taps = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: () => setState(() => taps++),
+      child: Text('${widget.label}: $taps'),
+    );
+  }
+}
+
+// Step 5: Keys and Swapping
+// Think answer: Without keys, Flutter matches incoming widgets to existing Elements strictly by 
+// runtimeType and position in the Row. When reversed, the Element and its attached State remain at 
+// index 0, so the tap count stays on the left while only the widget configuration (label) updates.
+class SwapBoard extends StatefulWidget {
+  const SwapBoard({super.key});
+
+  @override
+  State<SwapBoard> createState() => _SwapBoardState();
+}
+
+class _SwapBoardState extends State<SwapBoard> {
+  late List<Widget> tiles;
+
+  @override
+  void initState() {
+    super.initState();
+    tiles = [
+      Tile(tileA, key: ValueKey(tileA)),
+      Tile(tileB, key: ValueKey(tileB)),
+      Tile(tileC, key: ValueKey(tileC)),
+    ];
+  }
+
+  void swap() => setState(() => tiles = tiles.reversed.toList());
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Row(children: tiles),
+        ElevatedButton(
+          key: const Key('swap'),
+          onPressed: swap,
+          child: const Text('Swap'),
+        ),
+      ],
+    );
+  }
+}
