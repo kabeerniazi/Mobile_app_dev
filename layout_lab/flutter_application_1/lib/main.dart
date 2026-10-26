@@ -342,3 +342,36 @@ class InfoPanel extends StatelessWidget {
     );
   }
 }
+// Step 7: Overflow and Expanded
+// Think answer: By default, Text widgets ask for unbounded width in a Row. Expanded passes a tight, 
+// bounded horizontal constraint downward to the Text. Once constrained, the Text calculates its 
+// size upward by wrapping lines within that boundary.
+class SummaryRow extends StatelessWidget {
+  const SummaryRow({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Row(
+      children: [
+        Expanded(
+          child: Text(
+            'Part A: read the widget tree of the $course board from top to bottom.',
+            key: Key('sum-a'),
+          ),
+        ),
+        Expanded(
+          child: Text(
+            'Part B: build each box from small widgets and never extend a builtin class.',
+            key: Key('sum-b'),
+          ),
+        ),
+        Expanded(
+          child: Text(
+            'Part C: break the layout on purpose, then fix it with Expanded or Wrap.',
+            key: Key('sum-c'),
+          ),
+        ),
+      ],
+    );
+  }
+}
