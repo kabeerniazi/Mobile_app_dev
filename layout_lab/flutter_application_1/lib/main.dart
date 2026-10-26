@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 const String studentName = 'Muhammad Kabeer Khan';
-const String rollNo = 'YOUR-ROLL-NO-HERE'; // e.g. '21F-0347'
+const String rollNo = '04072313029'; // e.g. '21F-0347'
 
 // ===== Seeded settings (generated from YOUR roll number). Do not edit. =====
 final int seed = int.parse(rollNo.substring(rollNo.length - 2));
@@ -139,5 +139,37 @@ class SummaryRow extends StatelessWidget {
         ),
       ],
     );
+  }
+}
+
+// Step 1: Clock
+// Think answer: We start the Timer in initState because it is called exactly once when the 
+// State object is created. If started in build(), every rebuild would launch an additional 
+// active Timer, causing the clock to accelerate uncontrollably and leak memory.
+class Clock extends StatefulWidget {
+  const Clock({super.key});
+
+  @override
+  State<Clock> createState() => _ClockState();
+}
+
+class _ClockState extends State<Clock> {
+  late Timer _timer;
+  int _seconds = startSec;
+
+  @override
+  void initState() {
+    super.initState();
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      setState(() => _seconds += tick);
+      if (_seconds >= stopAt) {
+        timer.cancel();
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Text('Session: $_seconds s', key: const Key('clock'));
   }
 }
