@@ -142,10 +142,10 @@ class SummaryRow extends StatelessWidget {
   }
 }
 
-// Step 1: Clock
-// Think answer: We start the Timer in initState because it is called exactly once when the 
-// State object is created. If started in build(), every rebuild would launch an additional 
-// active Timer, causing the clock to accelerate uncontrollably and leak memory.
+// Step 2: dispose, build count, lifecycleLog
+// Think answer: Builds goes up by one per second because each tick triggers exactly one setState().
+// If _timer.cancel() were omitted from dispose, the periodic timer would keep firing and calling 
+// setState() on an unmounted State object, throwing 'setState() called after dispose()'.
 class Clock extends StatefulWidget {
   const Clock({super.key});
 
@@ -156,10 +156,12 @@ class Clock extends StatefulWidget {
 class _ClockState extends State<Clock> {
   late Timer _timer;
   int _seconds = startSec;
+  int _builds = 0;
 
   @override
   void initState() {
     super.initState();
+    lifecycleLog.add('initState');
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() => _seconds += tick);
       if (_seconds >= stopAt) {
@@ -169,7 +171,21 @@ class _ClockState extends State<Clock> {
   }
 
   @override
+  void dispose() {
+    _timer.cancel();
+    lifecycleLog.add('dispose');
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Text('Session: $_seconds s', key: const Key('clock'));
+    _builds++;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Session: $_seconds s', key: const Key('clock')),
+        Text('Builds: $_builds', key: const Key('builds')),
+      ],
+    );
   }
 }
