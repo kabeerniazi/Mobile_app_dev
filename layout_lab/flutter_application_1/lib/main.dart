@@ -189,3 +189,27 @@ class _ClockState extends State<Clock> {
     );
   }
 }
+
+// Step 3: BuildContext: Widget vs Element
+// Think answer: Widget is the immutable configuration blueprint that is cheap and thrown away on 
+// every rebuild. Element is the persistent node in the tree that manages lifecycle and keeps State.
+// The RenderObject lives in the render tree; it handles layout, sizing, and painting.
+class Probe extends StatelessWidget {
+  final int seconds;
+  const Probe({super.key, required this.seconds});
+
+  @override
+  Widget build(BuildContext context) {
+    final bool above = context.findAncestorWidgetOfExactType<Scaffold>() != null;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Seen at: $seconds s', key: const Key('probe-seen')),
+        Text('Widget #${identityHashCode(this)}', key: const Key('probe-widget')),
+        Text('Element #${identityHashCode(context)}', key: const Key('probe-element')),
+        Text('Context belongs to: ${context.widget.runtimeType}', key: const Key('probe-context')),
+        Text('Scaffold above me: $above', key: const Key('probe-above')),
+      ],
+    );
+  }
+}
