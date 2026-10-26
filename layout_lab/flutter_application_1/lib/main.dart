@@ -213,37 +213,3 @@ class Probe extends StatelessWidget {
     );
   }
 }
-
-// Step 4: Composition and Tile
-// Think answer: This is called Composition (prefer composition over inheritance). Flutter prefers 
-// it because assembling small single-purpose widgets creates flexible, decoupled, and declarative UIs.
-class Welcome extends StatelessWidget {
-  const Welcome({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Text('Welcome, $studentName', key: const Key('welcome')),
-    );
-  }
-}
-
-class Tile extends StatefulWidget {
-  final String label;
-  const Tile(this.label, {super.key});
-
-  @override
-  State<Tile> createState() => _TileState();
-}
-
-class _TileState extends State<Tile> {
-  int taps = 0;
-
-  @override
-  Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: () => setState(() => taps++),
-      child: Text('${widget.label}: $taps'),
-    );
-  }
-}
